@@ -1,17 +1,51 @@
+# Maven
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-# https://maven.apache.org/wrapper/#usage-without-binary-jar
-.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+*.class
+*.jar
+*.war
+*.ear
+*.tar.gz
+*.zip
 
-# Eclipse m2e generated files
-# Eclipse Core
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Eclipse
 .project
-# JDT-specific (Eclipse Java Development Tools)
 .classpath
+.settings/
+
+# NetBeans
+.nb-gradle/
+
+# PHP
+vendor/
+composer.lock
+composer.phar
+*.log
+*.env
+node_modules/
+phpunit.xml
+phpunit.xml.dist
+/.idea/
+*.sublime-workspace
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Thumbnails and Finder metadata
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Other system files
+Desktop.ini
