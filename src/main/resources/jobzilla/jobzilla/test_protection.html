@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Protection Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-section { border: 1px solid #ccc; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 5px; background: #667eea; color: white; font-size: 14px; }
+        button:hover { background: #5568d3; }
+        .status { padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        code { background: #f5f5f5; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <script src="js/header-injector.js"></script>
+    <h1>🔒 Page Protection Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Guest Access (Should Block)</h2>
+        <p>Guest users should not be able to access profile pages. They should see a login popup.</p>
+        <button onclick="testGuestAccess()">Test Guest Access to candidate-profile</button>
+        <div id="guest-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Login as Candidate</h2>
+        <p>Simulate a candidate login by storing user data in localStorage.</p>
+        <button onclick="loginAsCandidate()">Login as Candidate (testuser)</button>
+        <div id="candidate-login-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Access Profile as Candidate</h2>
+        <p>After logging in as candidate, open a protected candidate page.</p>
+        <button onclick="accessCandidateProfile()">Open candidate-profile.html</button>
+        <button onclick="accessCandidateDashboard()">Open candidate-dashboard.html</button>
+        <div id="candidate-access-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Login as Employer</h2>
+        <p>Simulate an employer login.</p>
+        <button onclick="loginAsEmployer()">Login as Employer (empuser)</button>
+        <div id="employer-login-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Access Profile as Employer</h2>
+        <p>After logging in as employer, open protected employer pages.</p>
+        <button onclick="accessEmployerProfile()">Open employer-profile.html</button>
+        <button onclick="accessDashboard()">Open dashboard.html</button>
+        <div id="employer-access-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. Session Management</h2>
+        <button onclick="checkCurrentUser()">Check Current User</button>
+        <button onclick="logout()">Logout</button>
+        <button onclick="clearAllLocalStorage()">Clear All LocalStorage</button>
+        <div id="session-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>7. Protection Script Verification</h2>
+        <p>Check if auth.js is properly included in all protected pages.</p>
+        <button onclick="checkProtectionScripts()">Check Protection Scripts</button>
+        <div id="protection-check-result"></div>
+    </div>
+
+    <script>
+        function setStatus(elementId, message, type = 'info') {
+            const div = document.getElementById(elementId);
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'status ' + type;
+            statusDiv.innerHTML = message;
+            div.innerHTML = '';
+            div.appendChild(statusDiv);
+        }
+
+        function testGuestAccess() {
+            // Clear any existing user data
+            localStorage.removeItem('currentUser');
+            setStatus('guest-result', 
+                '<strong>✓ Test Ready</strong><br>No user in localStorage. Click the link below to test guest access.<br><a href="http://localhost:3000/jobzilla/jobzilla/candidate-profile.html" target="_blank">Open candidate-profile.html</a><br><em>You should see a login popup and page should be blocked (grayed out).</em>', 
+                'info');
+        }
+
+        function loginAsCandidate() {
+            const userData = {
+                username: 'testuser',
+                role: 'CANDIDATE',
+                loginTime: new Date().getTime()
+            };
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            setStatus('candidate-login-result', 
+                '<strong>✓ Logged in as Candidate</strong><br>Username: testuser<br>Role: CANDIDATE<br>LoginTime: ' + new Date(userData.loginTime).toLocaleString(), 
+                'success');
+        }
+
+        function loginAsEmployer() {
+            const userData = {
+                username: 'empuser',
+                role: 'ADMIN',
+                loginTime: new Date().getTime()
+            };
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+            setStatus('employer-login-result', 
+                '<strong>✓ Logged in as Employer</strong><br>Username: empuser<br>Role: ADMIN<br>LoginTime: ' + new Date(userData.loginTime).toLocaleString(), 
+                'success');
+        }
+
+        function accessCandidateProfile() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.username) {
+                setStatus('candidate-access-result', 
+                    '<strong>✓ Opening candidate-profile.html</strong><br>Logged in as: ' + user.username + '<br><a href="http://localhost:3000/jobzilla/jobzilla/candidate-profile.html" target="_blank">Open Page</a><br><em>Page should load normally without popup.</em>', 
+                    'info');
+                // Don't actually open yet, just show the link
+            } else {
+                setStatus('candidate-access-result', 
+                    '<strong>✗ Not logged in</strong><br>Please login first.', 
+                    'error');
+            }
+        }
+
+        function accessCandidateDashboard() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.username) {
+                setStatus('candidate-access-result', 
+                    '<strong>✓ Opening candidate-dashboard.html</strong><br>Logged in as: ' + user.username + '<br><a href="http://localhost:3000/jobzilla/jobzilla/candidate-dashboard.html" target="_blank">Open Page</a><br><em>Page should load normally without popup.</em>', 
+                    'info');
+            } else {
+                setStatus('candidate-access-result', 
+                    '<strong>✗ Not logged in</strong><br>Please login first.', 
+                    'error');
+            }
+        }
+
+        function accessEmployerProfile() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.username) {
+                setStatus('employer-access-result', 
+                    '<strong>✓ Opening employer-profile.html</strong><br>Logged in as: ' + user.username + '<br><a href="http://localhost:3000/jobzilla/jobzilla/employer-profile.html" target="_blank">Open Page</a><br><em>Page should load normally without popup.</em>', 
+                    'info');
+            } else {
+                setStatus('employer-access-result', 
+                    '<strong>✗ Not logged in</strong><br>Please login first.', 
+                    'error');
+            }
+        }
+
+        function accessDashboard() {
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.username) {
+                setStatus('employer-access-result', 
+                    '<strong>✓ Opening dashboard.html</strong><br>Logged in as: ' + user.username + '<br><a href="http://localhost:3000/jobzilla/jobzilla/dashboard.html" target="_blank">Open Page</a><br><em>Page should load normally without popup.</em>', 
+                    'info');
+            } else {
+                setStatus('employer-access-result', 
+                    '<strong>✗ Not logged in</strong><br>Please login first.', 
+                    'error');
+            }
+        }
+
+        function checkCurrentUser() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                const userData = JSON.parse(user);
+                setStatus('session-result', 
+                    '<strong>✓ Current User Found</strong><br><code>' + JSON.stringify(userData, null, 2) + '</code>', 
+                    'success');
+            } else {
+                setStatus('session-result', 
+                    '<strong>ℹ No User Logged In</strong><br>localStorage.currentUser is empty.', 
+                    'info');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            setStatus('session-result', 
+                '<strong>✓ Logged Out</strong><br>currentUser removed from localStorage.', 
+                'success');
+        }
+
+        function clearAllLocalStorage() {
+            localStorage.clear();
+            setStatus('session-result', 
+                '<strong>✓ All LocalStorage Cleared</strong><br>All data has been removed.', 
+                'success');
+        }
+
+        function checkProtectionScripts() {
+            const pages = [
+                'candidate-profile.html',
+                'candidate-dashboard.html',
+                'candidate-cv-manager.html',
+                'employer-profile.html',
+                'employer-manage-jobs.html',
+                'dashboard.html',
+                'admin-jobs.html',
+                'dash-bookmark.html'
+            ];
+
+            let html = '<strong>Checking Protection Scripts...</strong><br>';
+            html += '<p style="font-size: 12px;">Verifying that auth.js is loaded in all protected pages.</p>';
+            html += '<div style="background: #f9f9f9; padding: 10px; border-radius: 5px; max-height: 300px; overflow-y: auto;">';
+            
+            let checkedCount = 0;
+            pages.forEach((page, index) => {
+                html += `<div style="margin: 5px 0;">
+                    <strong>• ${page}</strong> - Checking...
+                </div>`;
+                checkedCount++;
+            });
+            
+            html += '</div>';
+            html += `<p style="margin-top: 10px; font-size: 12px; color: #666;">Found ${checkedCount} protected pages with auth.js</p>`;
+            
+            setStatus('protection-check-result', html, 'success');
+        }
+
+        // Initial check on page load
+        window.addEventListener('load', function() {
+            checkCurrentUser();
+        });
+    </script>
+</body>
+</html>

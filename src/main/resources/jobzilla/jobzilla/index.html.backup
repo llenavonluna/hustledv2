@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <script>
+        // This function waits until the entire HTML document is ready
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // The code inside here will ONLY run after the button and popup exist on the page
+            var chatToggler = document.getElementById('chat-toggler');
+            var chatPopup = document.getElementById('librechat-popup-container');
+
+            // This checks if the elements were successfully found
+            if (chatToggler && chatPopup) {
+
+                // Attach the click listener to the button
+                chatToggler.addEventListener('click', function() {
+                    // console.log("Chat button clicked! Toggling window."); // Debug line
+
+                    // Toggle the 'open' class
+                    if (chatPopup.classList.contains('open')) {
+                        chatPopup.classList.remove('open');
+                    } else {
+                        chatPopup.classList.add('open');
+                    }
+                });
+            }
+
+            // ==================== AUTHENTICATION HANDLERS ====================
+
+            // Handle Candidate Sign Up
+            const candidateSignUpForm = document.getElementById('candidateSignUpForm');
+            if (candidateSignUpForm) {
+                candidateSignUpForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.querySelector('#sign-candidate input[name="username"]').value;
+                    const email = document.querySelector('#sign-candidate input[name="email"]').value;
+                    const password = document.querySelector('#sign-candidate input[name="password"]').value;
+                    const phone = document.querySelector('#sign-candidate input[name="phone"]').value;
+
+                    try {
+                        console.log('Submitting candidate signup form...', { username, email, password, phone });
+                        const response = await fetch('http://localhost:8080/api/auth/signup/candidate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                email: email,
+                                password: password,
+                                phone: phone
+                            })
+                        });
+
+                        console.log('Response status:', response.status);
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        
+                        if (data.success) {
+                            alert('Registration successful! Please login.');
+                            // Close signup modal and open login modal
+                            document.getElementById('sign_up_popup').classList.remove('show');
+                            document.getElementById('sign_up_popup2').classList.add('show');
+                            candidateSignUpForm.reset();
+                        } else {
+                            alert('Registration failed: ' + data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error: ' + error.message);
+                    }
+                });
+            }
+
+            // Handle Employer Sign Up
+            const employerSignUpForm = document.getElementById('employerSignUpForm');
+            if (employerSignUpForm) {
+                employerSignUpForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.querySelector('#sign-Employer input[name="username"]').value;
+                    const email = document.querySelector('#sign-Employer input[name="email"]').value;
+                    const password = document.querySelector('#sign-Employer input[name="password"]').value;
+                    const phone = document.querySelector('#sign-Employer input[name="phone"]').value;
+
+                    try {
+                        console.log('Submitting employer signup form...', { username, email, password, phone });
+                        const response = await fetch('http://localhost:8080/api/auth/signup/admin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                email: email,
+                                password: password,
+                                phone: phone
+                            })
+                        });
+
+                        console.log('Response status:', response.status);
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        
+                        if (data.success) {
+                            alert('Registration successful! Please login.');
+                            // Close signup modal and open login modal
+                            document.getElementById('sign_up_popup').classList.remove('show');
+                            document.getElementById('sign_up_popup2').classList.add('show');
+                            employerSignUpForm.reset();
+                        } else {
+                            alert('Registration failed: ' + data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error: ' + error.message);
+                    }
+                });
+            }
+
+            // Handle Candidate Login
+            const candidateLoginForm = document.getElementById('candidateLoginForm');
+            if (candidateLoginForm) {
+                candidateLoginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.querySelector('#login-candidate input[name="username"]').value;
+                    const password = document.querySelector('#login-candidate input[name="password"]').value;
+
+                    try {
+                        console.log('Submitting candidate login form...', { username });
+                        const response = await fetch('http://localhost:8080/api/auth/login/candidate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+                        });
+
+                        console.log('Response status:', response.status);
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        
+                        if (data.success) {
+                            // Store user info in localStorage
+                            localStorage.setItem('user', JSON.stringify({
+                                id: data.userId,
+                                username: data.username,
+                                email: data.email,
+                                role: data.role
+                            }));
+                            alert('Login successful!');
+                            // Close modal and redirect
+                            document.getElementById('sign_up_popup2').classList.remove('show');
+                            candidateLoginForm.reset();
+                            // Redirect to candidate dashboard
+                            window.location.href = '/candidate-dashboard.html';
+                        } else {
+                            alert('Login failed: ' + data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error: ' + error.message);
+                    }
+                });
+            }
+
+            // Handle Employer Login
+            const employerLoginForm = document.getElementById('employerLoginForm');
+            if (employerLoginForm) {
+                employerLoginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const username = document.querySelector('#login-Employer input[name="username"]').value;
+                    const password = document.querySelector('#login-Employer input[name="password"]').value;
+
+                    try {
+                        console.log('Submitting employer login form...', { username });
+                        const response = await fetch('http://localhost:8080/api/auth/login/admin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+                        });
+
+                        console.log('Response status:', response.status);
+                        const data = await response.json();
+                        console.log('Response data:', data);
+                        
+                        if (data.success) {
+                            // Store user info in localStorage
+                            localStorage.setItem('user', JSON.stringify({
+                                id: data.userId,
+                                username: data.username,
+                                email: data.email,
+                                role: data.role
+                            }));
+                            alert('Login successful!');
+                            // Close modal and redirect
+                            document.getElementById('sign_up_popup2').classList.remove('show');
+                            employerLoginForm.reset();
+                            // Redirect to employer dashboard
+                            window.location.href = '/dash-employer.html';
+                        } else {
+                            alert('Login failed: ' + data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Error: ' + error.message);
+                    }
+                });
+            }
+        });
+    </script>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <meta name="robots" content="" />
+    <meta name="description" content="" />
+
+    <!-- FAVICONS ICON -->
+    <link rel="icon" href="images/hustled_icon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.png" />
+
+    <!-- PAGE TITLE HERE -->
+    <title>HustlEd | Home</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/feather.css">
+    <link rel="stylesheet" type="text/css" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" type="text/css" href="css/magnific-popup.min.css">
+    <link rel="stylesheet" type="text/css" href="css/lc_lightbox.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="css/select.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dropzone.css">
+    <link rel="stylesheet" type="text/css" href="css/scrollbar.css">
+    <link rel="stylesheet" type="text/css" href="css/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="css/flaticon.css">
+    <link rel="stylesheet" type="text/css" href="css/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" class="skin" type="text/css" href="css/skins-type/skin-4.css">
+
+
+
+</head>
+
+<body>
+
+    <header  class="site-header header-style-3 mobile-sider-drawer-menu">
+        <div class="pattern-layer" style="background-image:url(images/resource/shape-1.png)"></div>
+
+        <div class="sticky-header main-bar-wraper  navbar-expand-lg">
+
+            <div class="main-bar">
+
+                <div class="container-fluid clearfix">
+
+                    <div class="logo-header">
+                        <div class="logo-header-inner logo-header-one">
+                            <a href="index.html">
+                                <img src="images/HustlEd.svg" alt="">
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <button id="mobile-side-drawer" data-target=".header-nav" data-toggle="collapse" type="button" class="navbar-toggler collapsed">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar icon-bar-first"></span>
+                        <span class="icon-bar icon-bar-two"></span>
+                        <span class="icon-bar icon-bar-three"></span>
+                    </button>
+
+                    <div class="nav-animation header-nav navbar-collapse collapse d-flex **justify-content-start**">
+
+                        <ul class=" nav navbar-nav">
+                            <li class="has-mega-menu"><a href="index.html">Home</a>
+                            <li class="has-child"><a href="job-grid.html">Jobs</a>
+                            <li class="has-child"><a href="candidate-grid.html">Candidates</a>
+                            </li>
+                            <li class="has-child">
+                                <a href="#main-footer">About us</a>
+                            </li>
+                        </ul>
+
+                    </div>
+
+
+                    <div class="extra-nav header-2-nav">
+                        <div class="extra-cell">
+                            <div class="header-search">
+                                <a href="#search" class="header-search-icon"><i class="feather-search"></i></a>
+                            </div>
+                        </div>
+                        <div class="extra-cell">
+                            <div class="header-nav-btn-section">
+                                <div class="twm-nav-btn-left">
+                                    <a class="twm-nav-sign-up" data-bs-toggle="modal" href="#sign_up_popup" role="button">
+                                        <i class="feather-log-in"></i> Sign Up
+                                    </a>
+                                </div>
+                                <div class="twm-nav-btn-right">
+                                    <a href="dash-post-job.html" class="twm-nav-post-a-job">
+                                        <i class="feather-briefcase"></i> Post a job
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+            <div id="search">
+                <span class="close"></span>
+                <form role="search" id="searchform" action="/search" method="get" class="radius-xl">
+                    <input class="form-control" value="" name="q" type="search" placeholder="Type to search"/>
+                    <span class="input-group-append">
+                            <button type="button" class="search-btn">
+                                <i class="fa fa-paper-plane"></i>
+                            </button>
+                        </span>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class="page-content">
+
+        <div class="twm-home1-banner-section bg-white">
+            <div class="row">
+
+                <div class="center-content">
+                    <div class="twm-bnr-left-section">
+                        <div class="twm-bnr-title-large cinematic-text">
+                            The <span class="site-text-primary">Matching Platform </span>for Trainees and Companies.
+                        </div>
+
+                        <div class="row justify-content-center cinematic-buttons">
+
+                            <div class="form-group col-lg-5 col-md-5 col-12 mb-2 mb-md-0">
+                                <button type="button" class="site-button w-100" onclick="window.location.href='candidate-grid.html'">Hire a Talent</button>
+                            </div>
+
+                            <div class="form-group col-lg-5 col-md-5 col-12">
+                                <button type="button" class="site-button w-100" onclick="window.location.href='job-grid.html'">Find a Jobs</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+                        <div class="twm-small-ring-l slide-top-animation"></div>
+                        <div class="twm-small-ring-2 slide-top-animation"></div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- about-section -->
+        <section class="about-section pt_120 pb_120">
+            <div class="auto-container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 col-md-12 col-sm-12 video-column">
+                        <div class="video_block_one">
+                            <div class="video-box p_relative pt_40 pb_40 pl_30 centred">
+                                <div class="image-layer">
+                                    <figure class="image-1"><img src="images/thumbnail.jpg)" alt=""></figure>
+                                    <figure class="image-2"><img src="images/thumbnail.jpg)" alt=""></figure>
+                                </div>
+                                <div class="video-inner" style="background-image: url(images/thumbnail.jpg);">
+                                    <div class="video-content">
+                                        <a href="https://www.youtube.com/watch?v=nfP5N9Yc72A&amp;t=28s" class="fa-solid fa-play" style="color: #28a745;"></i><span class="border-animation border-1"></span><span class="border-animation border-2"></span><span class="border-animation border-3"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 content-column">
+                        <div class="content_block_one">
+                            <div class="content-box ml_80">
+                                <div class="sec-title pb_20 sec-title-animation animation-style2">
+                                    <span class="sub-title mb_10 title-animation">About us</span>
+                                    <h2 class="title-animation">The Student–Company Matching Platform <span>Built for Letranites</span></h2>
+                                </div>
+                                <div class="text-box">
+                                    <p>Husteld is a dedicated platform that connects Letran students to reputable partner companies for On-the-Job Training (OJT), internships, and real-world experience opportunities.</p>
+
+                                    <ul class="list-style-one clearfix list-unstyled">
+                                        <li><i class="bi bi-patch-check-fill text-success"></i> This helps businesses maintain service excellence</li>
+                                        <li><i class="bi bi-patch-check-fill text-success"></i> This scalability allows businesses to adjust staffing</li>
+                                    </ul>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- process-section -->
+    <div class="section-full p-t120 p-b120 twm-explore-area bg-cover">
+
+        <video autoplay muted loop playsinline id="background-video">
+            <source src="images/bg-1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <div class="video-overlay"></div>
+
+        <div class="container">
+
+            <div class="section-content">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10 rounded-5">
+                        <div class="twm-explore-content-outer">
+                            <div class="twm-explore-content">
+
+                                <div class="twm-l-line-1"></div>
+                                <div class="twm-l-line-2"></div>
+                                <div class="twm-r-circle-1"></div>
+                                <div class="twm-r-circle-2"></div>
+                                <div class="twm-title-small">Be Found. Get Hired.</div>
+                                <div class="twm-title-large">
+                                    <h2 style="color: white;">Stop searching. Upload your resume to put your profile directly in front of top OJT employers. </h2>
+                                    <p style="color: white;">Leverage AI to enhance your application experience.</p>
+                                </div>
+                                <a href="http://localhost:3080/c/new">
+                                    <button type="button" class="site-button">Upload Your Resume <i class="feather-upload"></i></button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+        <div class="section-full p-t120  site-bg-white twm-companies-wrap">
+
+            <div class="section-head center wt-small-separator-outer">
+                <div class="wt-small-separator site-text-primary">
+
+                    <div>Top Companies</div>
+                </div>
+                <h2 class="wt-title">Get trained in our partner companies.</h2>
+            </div>
+            <div class="container">
+                <div class="section-content">
+                    <div class="owl-carousel home-client-carousel2 owl-btn-vertical-center">
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w1.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w2.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w3.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w4.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w5.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w6.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w1.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w2.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w3.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="ow-client-logo">
+                                <div class="client-logo client-logo-media">
+                                    <a href="employer-list.html"><img src="images/client-logo/w5.png" alt=""></a></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        </div>
+
+
+        <section class="row clearfix team-row-flex"">
+            <div class="auto-container">
+
+                <div class="sec-title pb_60 sec-title-animation animation-style2"
+                     style="text-align: center; margin-top: 50px;">
+                    <span class="sub-title mb_10 title-animation">Our Team</span>
+                    <h2 class="title-animation">Meet The Team</h2>
+                </div>
+
+                <div class="row clearfix">
+                    <div class="col-lg-4 col-md-6 col-sm-12 team-block">
+                        <div class="team-block-one wow fadeInUp animated" data-wow-delay="00ms" data-wow-duration="1500ms">
+                            <div class="inner-box">
+                                <div class="image-box">
+                                    <figure class="image"><img src="images/team/team-1.jpg" alt=""></figure>
+                                    <figure class="overlay-image"><img src="images/team/team-1.jpg" alt=""></figure>
+                                </div>
+                                <div class="lower-content">
+                                    <h3><a href="index.html">John Lloyd Calizo</a></h3>
+                                    <span class="designation">Lead Web Developer</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 team-block">
+                        <div class="team-block-one wow fadeInUp animated" data-wow-delay="200ms" data-wow-duration="1500ms">
+                            <div class="inner-box">
+                                <div class="image-box">
+                                    <figure class="image"><img src="images/team/team-2.jpg" alt=""></figure>
+                                    <figure class="overlay-image"><img src="images/team/team-2.jpg" alt=""></figure>
+                                </div>
+                                <div class="lower-content">
+                                    <h3><a href="index.html">Justine Coz</a></h3>
+                                    <span class="designation">Database Administrator </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 team-block">
+                        <div class="team-block-one wow fadeInUp animated" data-wow-delay="400ms" data-wow-duration="1500ms">
+                            <div class="inner-box">
+                                <div class="image-box">
+                                    <figure class="image"><img src="images/team/team-3.jpg" alt=""></figure>
+                                    <figure class="overlay-image"><img src="images/team/team-3.jpg" alt=""></figure>
+                                </div>
+                                <div class="lower-content">
+                                    <h3><a href="index.html">Ma. Florence Jayme</a></h3>
+                                    <span class="designation">Documentation Specialist</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lower-box">
+                    <div class="row clearfix">
+                        <div class="col-lg-4 col-md-6 col-sm-12 team-block">
+                            <div class="team-block-one wow fadeInUp animated" data-wow-delay="00ms" data-wow-duration="1500ms">
+                                <div class="inner-box">
+                                    <div class="image-box">
+                                        <figure class="image"><img src="images/team/team-4.jpg" alt=""></figure>
+                                        <figure class="overlay-image"><img src="images/team/team-4.jpg" alt=""></figure>
+                                    </div>
+                                    <div class="lower-content">
+                                        <h3><a href="index.html">Charlotte Uraga</a></h3>
+                                        <span class="designation">Content Writer</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 team-block">
+                            <div class="team-block-one wow fadeInUp animated" data-wow-delay="200ms" data-wow-duration="1500ms">
+                                <div class="inner-box">
+                                    <div class="image-box">
+                                        <figure class="image"><img src="images/team/team-5.jpg" alt=""></figure>
+                                        <figure class="overlay-image"><img src="images/team/team-5.jpg" alt=""></figure>
+                                    </div>
+                                    <div class="lower-content">
+                                        <h3><a href="index.html">Justin Gomez</a></h3>
+                                        <span class="designation">Researcher</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 team-block">
+                            <div class="team-block-one wow fadeInUp animated" data-wow-delay="400ms" data-wow-duration="1500ms">
+                                <div class="inner-box">
+                                    <div class="image-box">
+                                        <figure class="image"><img src="images/team/team-6.jpg" alt=""></figure>
+                                        <figure class="overlay-image"><img src="images/team/team-6.jpg" alt=""></figure>
+                                    </div>
+                                    <div class="lower-content">
+                                        <h3><a href="index.html">Kennieth Dulay</a></h3>
+                                        <span class="designation">Researcher</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    <button
+            id="chat-toggler"
+            title="Chat with our OJT Assistant"
+            style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #3f51b5;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);"
+    >
+    </button>
+
+    <div
+            id="librechat-popup-container"
+            style="
+        display: none;
+        position: fixed;
+        bottom: 90px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        z-index: 9999;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);"
+    >
+        <iframe src="http://localhost:3080" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+    </div>
+    <footer class="footer-modern" id="main-footer">
+        <div class="container">
+
+            <div class="footer-top-grid">
+
+                <div class="footer-col footer-about">
+                    <a href="index.html" class="footer-logo">
+                        <img src="images/HustlEd-white.svg" alt="HustlEd Logo">
+                    </a>
+                    <p>Helping you find the perfect career and connect with the best employers.</p>
+
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <a href="https://maps.app.goo.gl/5yrFFn8Kwdc51dEg9">Letran Manaoag | Manaoag, Pangasinan 2430 </a>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:hustled2025@gmail.com">hustled2025@gmail.com</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:092417612512">092417612512</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3 class="footer-title">For Candidates</h3>
+                    <ul class="footer-links">
+                        <li><a href="job-list.html">Jobs Dashboard</a></li>
+                        <li><a href="https://www.youtube.com/watch?v=uF4gZa3mBlE">OJT Tips</a></li>
+                        <li><a href="https://ph.prosple.com/campus/5-best-practices-to-prepare-for-your-next-ojt">Best Practices on OJT</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3 class="footer-title">For Employers</h3>
+                    <ul class="footer-links">
+                        <li><a href="dash-post-job.html">Post a Job</a></li>
+                        <li><a href="employer-list.html">Browse Employers</a></li>
+                        <li><a href="employer-detail.html">Employer Detail</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="about-1.html">About Us</a></li>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="dash-my-profile.html">My Profile</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom-info">
+                <span class="copyrights-text">Copyright &copy; 2025 by BSIT 4 | Block 1 of Letran - Manaoag. All Rights Reserved.</span>
+
+                <ul class="social-icons">
+                    <li><a href="javascript:void(0);" aria-label="Facebook" class="fab fa-facebook-f"></a></li>
+                    <li><a href="javascript:void(0);" aria-label="Twitter" class="fab fa-twitter"></a></li>
+                    <li><a href="javascript:void(0);" aria-label="Instagram" class="fab fa-instagram"></a></li>
+                    <li><a href="javascript:void(0);" aria-label="YouTube" class="fab fa-youtube"></a></li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+
+    </div>
+
+    <!--Model Popup Section Start-->
+    <!--Signup popup -->
+    <div class="modal fade twm-sign-up" id="sign_up_popup" aria-hidden="true" aria-labelledby="sign_up_popupLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form>
+
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="sign_up_popupLabel">Sign Up</h2>
+                        <p>Sign Up and get access to all the features of Jobzilla</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="twm-tabs-style-2">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                                <!--Signup Candidate-->
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sign-candidate" type="button"><i class="fas fa-user-tie"></i>Candidate</button>
+                                </li>
+                                <!--Signup Employer-->
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sign-Employer" type="button"><i class="fas fa-building"></i>Employer</button>
+                                </li>
+
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <!--Signup Candidate Content-->
+                                <div class="tab-pane fade show active" id="sign-candidate">
+                                    <form id="candidateSignUpForm">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="username" type="text" required="" class="form-control" placeholder="Username*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="password" type="password" class="form-control" required="" placeholder="Password*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="email" type="email" class="form-control" required="" placeholder="Email*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="phone" type="text" class="form-control" required="" placeholder="Phone*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <div class=" form-check">
+                                                        <input type="checkbox" class="form-check-input" id="agree1" required>
+                                                        <label class="form-check-label" for="agree1">I agree to the <a href="javascript:;">Terms and conditions</a></label>
+                                                        <p>Already registered?
+                                                            <button type="button" class="twm-backto-login" data-bs-target="#sign_up_popup2" data-bs-toggle="modal" data-bs-dismiss="modal">Log in here</button>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="submit" class="site-button">Sign Up</button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <!--Signup Employer Content-->
+                                <div class="tab-pane fade" id="sign-Employer">
+                                    <form id="employerSignUpForm">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="username" type="text" required="" class="form-control" placeholder="Username*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="password" type="password" class="form-control" required="" placeholder="Password*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="email" type="email" class="form-control" required="" placeholder="Email*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="phone" type="text" class="form-control" required="" placeholder="Phone*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <div class=" form-check">
+                                                        <input type="checkbox" class="form-check-input" id="agree2" required>
+                                                        <label class="form-check-label" for="agree2">I agree to the <a href="javascript:;">Terms and conditions</a></label>
+                                                        <p>Already registered?
+                                                            <button type="button" class="twm-backto-login" data-bs-target="#sign_up_popup2" data-bs-toggle="modal" data-bs-dismiss="modal">Log in here</button>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="submit" class="site-button">Sign Up</button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <span class="modal-f-title">Login or Sign up with</span>
+                        <ul class="twm-modal-social">
+                            <li><a href="javascript" class="facebook-clr"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="javascript" class="twitter-clr"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="javascript" class="linkedin-clr"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="javascript" class="google-clr"><i class="fab fa-google"></i></a></li>
+                        </ul>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <!--Login popup -->
+    <div class="modal fade twm-sign-up" id="sign_up_popup2" aria-hidden="true" aria-labelledby="sign_up_popupLabel2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <form>
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="sign_up_popupLabel2">Login</h2>
+                        <p>Login and get access to all the features of Jobzilla</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="twm-tabs-style-2">
+                            <ul class="nav nav-tabs" id="myTab2" role="tablist">
+
+                                <!--Login Candidate-->
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-candidate" type="button"><i class="fas fa-user-tie"></i>Candidate</button>
+                                </li>
+                                <!--Login Employer-->
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-Employer" type="button"><i class="fas fa-building"></i>Employer</button>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" id="myTab2Content">
+                                <!--Login Candidate Content-->
+                                <div class="tab-pane fade show active" id="login-candidate">
+                                    <form id="candidateLoginForm">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="username" type="text" required="" class="form-control" placeholder="Username*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="password" type="password" class="form-control" required="" placeholder="Password*">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <div class=" form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Password3">
+                                                        <label class="form-check-label rem-forgot" for="Password3">Remember me <a href="javascript:;">Forgot Password</a></label>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button type="submit" class="site-button">Log in</button>
+                                                <div class="mt-3 mb-3">Don't have an account ?
+                                                    <button type="button" class="twm-backto-login" data-bs-target="#sign_up_popup" data-bs-toggle="modal" data-bs-dismiss="modal">Sign Up</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+                                <!--Login Employer Content-->
+                                <div class="tab-pane fade" id="login-Employer">
+                                    <form id="employerLoginForm">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="username" type="text" required="" class="form-control" placeholder="Username*">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <input name="password" type="password" class="form-control" required="" placeholder="Password*">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group mb-3">
+                                                    <div class=" form-check">
+                                                        <input type="checkbox" class="form-check-input" id="Password4">
+                                                        <label class="form-check-label rem-forgot" for="Password4">Remember me <a href="javascript:;">Forgot Password</a></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <button type="submit" class="site-button">Log in</button>
+                                                <div class="mt-3 mb-3">Don't have an account ?
+                                                    <button type="button" class="twm-backto-login" data-bs-target="#sign_up_popup" data-bs-toggle="modal" data-bs-dismiss="modal">Sign Up</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <span class="modal-f-title">Login or Sign up with</span>
+                        <ul class="twm-modal-social">
+                            <li><a href="javascript" class="facebook-clr"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="javascript" class="twitter-clr"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="javascript" class="linkedin-clr"><i class="fab fa-linkedin-in"></i></a></li>
+                            <li><a href="javascript" class="google-clr"><i class="fab fa-google"></i></a></li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--Model Popup Section End-->
+</div>
+
+
+
+<script  src="js/jquery-3.6.0.min.js"></script>
+<script  src="js/popper.min.js"></script>
+<script  src="js/bootstrap.min.js"></script>
+<script  src="js/magnific-popup.min.js"></script>
+<script  src="js/waypoints.min.js"></script>
+<script  src="js/counterup.min.js"></script>
+<script  src="js/waypoints-sticky.min.js"></script>
+<script  src="js/isotope.pkgd.min.js"></script>
+<script  src="js/imagesloaded.pkgd.min.js"></script>
+<script  src="js/owl.carousel.min.js"></script>
+<script  src="js/theia-sticky-sidebar.js"></script>
+<script  src="js/lc_lightbox.lite.js" ></script>
+<script  src="js/bootstrap-select.min.js"></script>
+<script  src="js/dropzone.js"></script>
+<script  src="js/jquery.scrollbar.js"></script>
+<script  src="js/bootstrap-datepicker.js"></script>
+<script  src="js/jquery.dataTables.min.js"></script>
+<script  src="js/dataTables.bootstrap5.min.js"></script>
+<script  src="js/chart.js"></script>
+<script  src="js/custom.js"></script>
+<script  src="js/bootstrap-slider.min.js"></script>
+<script  src="js/swiper-bundle.min.js"></script>
+
+<div class="styleswitcher">
+
+
+</div>
+
+</body>
+
+</html>

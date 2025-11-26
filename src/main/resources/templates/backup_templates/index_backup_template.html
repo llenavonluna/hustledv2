@@ -1,0 +1,11 @@
+<!-- src/main/resources/templates/index_backup_template.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<div>
+    <h2>Welcome to HustlEd</h2>
+    <p>Search and manage jobs like a pro. Login to post and edit jobs.</p>
+    <p><a th:href="@{/jobs}">View Jobs</a></p>
+</div>
+</body>
+</html>

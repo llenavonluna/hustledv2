@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manage Jobs - Job Portal Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* Paste the full minimalist CSS block from the previous dashboard response here */
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 60px;
+            --primary-color: #3f51b5; /* A subtle blue for primary elements */
+            --secondary-color: #f0f2f5; /* Light grey for background */
+            --text-color: #333;
+            --light-text-color: #666;
+            --border-color: #e0e0e0;
+            --card-bg: #fff;
+            --shadow-light: rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* [Sidebar Styles (Simplified for brevity, assuming they are in your main CSS file)] */
+        .sidebar { /* ... styles ... */ }
+        .sidebar-nav ul li a { /* ... styles ... */ }
+
+        /* Main Content Styling */
+        .main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header { /* ... styles ... */ }
+        .page-content { padding: 25px; flex-grow: 1; }
+        .breadcrumbs { font-size: 0.9em; color: var(--light-text-color); margin-bottom: 25px; }
+        .breadcrumbs a { color: var(--primary-color); text-decoration: none; }
+
+        /* CRUD Specific Styles */
+        .crud-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 10px var(--shadow-light);
+        }
+
+        .crud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .crud-header h4 {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .crud-header .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 5px;
+            padding: 8px 15px;
+        }
+
+        /* Minimalist Table Styling */
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table thead th {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(var(--primary-color), 0.05);
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            font-size: 0.95em;
+        }
+
+        .job-status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .status-active { background-color: #e6f7d2; color: #52c41a; } /* Light Green */
+        .status-expired { background-color: #fff1f0; color: #f5222d; } /* Light Red */
+        .status-draft { background-color: #f0f5ff; color: #1890ff; } /* Light Blue */
+
+        .action-btns button {
+            background: none;
+            border: none;
+            color: var(--light-text-color);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-size: 1.1em;
+        }
+
+        .action-btns button:hover {
+            color: var(--primary-color);
+        }
+
+        /* [Responsive Styles (Simplified for brevity)] */
+        @media (max-width: 768px) { /* ... styles ... */ }
+
+    </style>
+    <!-- AUTH PROTECTION SCRIPT -->
+    <script src="js/auth.js"></script>
+    <script>
+        // Check if user is logged in before page loads
+        if (!canAccessProfilePage()) {
+            document.body.style.opacity = '0';
+            document.body.style.pointerEvents = 'none';
+        }
+    </script>
+    
+    </head>
+
+<body>
+    <script src="js/header-injector.js"></script>
+
+<aside class="sidebar" id="sidebar">
+    <div class="logo"><a href="index.html"><img src="images/logo-dark.png" alt="Company Logo"></a></div>
+    <nav class="sidebar-nav">
+        <ul>
+            <li><a href="dashboard.html"><i class="fa-solid fa-house fa-icon"></i><span>Dashboard</span></a></li>
+            <li class="active">
+                <a href="javascript:;" data-bs-toggle="collapse" data-bs-target="#jobsSubmenu" aria-expanded="true">
+                    <i class="fa-solid fa-briefcase fa-icon"></i><span>Jobs (CRUD)</span><i class="fas fa-chevron-down ms-auto" style="font-size: 0.8em;"></i>
+                </a>
+                <ul class="sub-menu collapse show" id="jobsSubmenu">
+                    <li><a href="dash-post-job.html">Create Job</a></li>
+                    <li class="active"><a href="dash-manage-jobs.html">Manage Jobs (RUD)</a></li>
+                </ul>
+            </li>
+            <li><a href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i class="fa-solid fa-right-from-bracket fa-icon"></i><span>Logout</span></a></li>
+        </ul>
+    </nav>
+</aside>
+
+<div class="main-content" id="main-content">
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+            <h3>Manage Jobs</h3>
+        </div>
+        <div class="header-right">
+            <div class="user-profile">
+                <img src="images/user-avtar/pic4.jpg" alt="Admin Avatar">
+                <span>Admin User</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <div class="breadcrumbs">
+            <a href="#">Home</a> <span>/</span> <a href="#">Jobs (CRUD)</a> <span>/</span> <span>Manage Jobs</span>
+        </div>
+
+        <div class="crud-card">
+            <div class="crud-header">
+                <h4>All Posted Jobs</h4>
+                <a href="dash-post-job.html" class="btn btn-primary">
+                    <i class="fa-solid fa-plus me-2"></i>Post New Job
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Employer</th>
+                        <th>Applicants</th>
+                        <th>Status</th>
+                        <th>Date Posted</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Senior Full Stack Developer</td>
+                        <td>Tech Innovators Inc.</td>
+                        <td>45</td>
+                        <td><span class="job-status-badge status-active">Active</span></td>
+                        <td>2025-11-01</td>
+                        <td class="action-btns">
+                            <button title="View Applicants"><i class="fa-solid fa-users"></i></button>
+                            <button title="Edit Job"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button title="Delete Job" data-bs-toggle="modal" data-bs-target="#deleteJobModal"><i class="fa-solid fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Marketing Manager</td>
+                        <td>Global Brands Ltd.</td>
+                        <td>12</td>
+                        <td><span class="job-status-badge status-expired">Expired</span></td>
+                        <td>2025-10-15</td>
+                        <td class="action-btns">
+                            <button title="View Applicants"><i class="fa-solid fa-users"></i></button>
+                            <button title="Edit Job"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button title="Delete Job" data-bs-toggle="modal" data-bs-target="#deleteJobModal"><i class="fa-solid fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Junior UI/UX Designer</td>
+                        <td>Creative Solutions</td>
+                        <td>78</td>
+                        <td><span class="job-status-badge status-active">Active</span></td>
+                        <td>2025-11-20</td>
+                        <td class="action-btns">
+                            <button title="View Applicants"><i class="fa-solid fa-users"></i></button>
+                            <button title="Edit Job"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button title="Delete Job" data-bs-toggle="modal" data-bs-target="#deleteJobModal"><i class="fa-solid fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Customer Service Rep</td>
+                        <td>Retail Giant</td>
+                        <td>5</td>
+                        <td><span class="job-status-badge status-draft">Draft</span></td>
+                        <td>2025-11-22</td>
+                        <td class="action-btns">
+                            <button title="View Applicants"><i class="fa-solid fa-users"></i></button>
+                            <button title="Edit Job"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button title="Delete Job" data-bs-toggle="modal" data-bs-target="#deleteJobModal"><i class="fa-solid fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </main>
+</div>
+
+<div class="modal fade" id="deleteJobModal" tabindex="-1" aria-labelledby="deleteJobModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteJobModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the job **Senior Full Stack Developer**? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn site-button" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Placeholder for future JavaScript logic (e.g., DataTables initialization, dynamic sorting)
+    // Sidebar toggle functionality (as defined in the previous response)
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.getElementById('menuToggle');
+        menuToggle.addEventListener('click', function() {
+            document.body.classList.toggle('sidebar-open');
+        });
+    });
+</script>
+</body>
+</html>

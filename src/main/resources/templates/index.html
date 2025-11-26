@@ -1,0 +1,56 @@
+f<!-- src/main/resources/templates/index.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+
+<!--<div>-->
+<!--    <h2>Welcome to HustlEd</h2>-->
+<!--    <p>Search and manage jobs like a pro. Login to post and edit jobs.</p>-->
+<!--    <p><a th:href="@{/jobs}">View Jobs</a></p>-->
+<!--</div>-->
+
+<div class="page-content">
+
+<div class="twm-home1-banner-section site-bg-gray bg-cover" th:style="|background-image:url('@{images/main-slider/slider1/bg1.jpg}')|">
+    <div class="row">
+
+        <div class="col-xl-6 col-lg-6 col-md-12">
+            <div class="twm-bnr-left-section">
+                <div class="twm-bnr-title-small">We Have <span class="site-text-primary">208,000+</span> Live Jobs</div>
+                <div class="twm-bnr-title-large">Find the <span class="site-text-primary">job</span> that fits your life</div>
+                <div class="twm-bnr-discription">Type your keyword, then click search to find your perfect job.</div>
+
+                <div class="twm-bnr-search-bar">
+                    <form>
+                        <div class="row">
+                            <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                                <button type="button" class="site-button" onclick="window.location.href='candidate-grid.html'">Hire a Talent</button>
+                            </div>
+
+                            <div class="form-group col-xl-6 col-lg-6 col-md-6">
+                                <button type="button" class="site-button" onclick="window.location.href='job-grid.html'">Find a Jobs</button>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="twm-bnr-popular-search">
+                    <span class="twm-title">Popular Searches:</span>
+                    <a href="job-list.html">Developer</a> ,
+                    <a href="job-list.html">Designer</a> ,
+                    <a href="job-list.html">Architect</a> ,
+                    <a href="job-list.html">Engineer</a> ...
+                </div>
+            </div>
+        </div>
+        <div class="twm-small-ring-l slide-top-animation"></div>
+        <div class="twm-small-ring-2 slide-top-animation"></div>
+    </div>
+</div>
+
+</div>
+
+
+</body>
+</html>

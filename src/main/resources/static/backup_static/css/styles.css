@@ -1,0 +1,6 @@
+/* src/main/resources/static/css/styles.css */
+body { font-family: Arial, sans-serif; margin: 20px; }
+nav a { margin-right: 10px; }
+label { display: inline-block; width: 100px; }
+input, textarea { width: 300px; max-width: 100%; }
+table { width: 100%; }

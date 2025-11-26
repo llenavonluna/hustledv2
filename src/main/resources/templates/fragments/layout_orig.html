@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <title>HustleEd</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <a th:href="@{/}">HustleEd</a>
+        <a th:href="@{/jobs}">Jobs</a>
+        <span style="float:right">
+            <span th:if="${#authorization.expression('isAuthenticated()')}">
+                Hello, <b th:text="${#authentication.name}">user</b> |
+                <a th:href="@{/logout}">Logout</a>
+            </span>
+            <span th:if="${#authorization.expression('!isAuthenticated()')}">
+                <a th:href="@{/login}">Login</a> |
+                <a th:href="@{/register}">Register</a>
+            </span>
+        </span>
+    </nav>
+</header>
+<hr>
+<div th:replace="${content}"></div>
+<footer><hr><small>&copy; 2025 HustleEd</small></footer>
+</body>
+</html>
