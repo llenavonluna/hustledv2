@@ -1,0 +1,24 @@
+<!-- src/main/resources/templates/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<div>
+    <h2>Login</h2>
+    <div th:if="${param.error}">
+        <p style="color:red">Invalid username or password.</p>
+    </div>
+    <div th:if="${param.registered}">
+        <p style="color:green">Registration successful. Please login.</p>
+    </div>
+    <form th:action="@{/process-login}" method="post">
+        <label>Username</label>
+        <input type="text" name="username" required>
+        <br>
+        <label>Password</label>
+        <input type="password" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+</div>
+</body>
+</html>

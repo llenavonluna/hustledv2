@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test Form</title></head>
+<body>
+    <script src="js/header-injector.js"></script>
+<h1>Test Registration</h1>
+<form id="testForm">
+  <input id="candidateUsername" type="text" placeholder="username" value="newuser999">
+  <input id="candidatePassword" type="password" placeholder="password" value="password123">
+  <input id="candidateEmail" type="email" placeholder="email" value="newuser999@test.com">
+  <input id="candidatePhone" type="text" placeholder="phone" value="9876543210">
+  <button type="button" onclick="handleCandidateSignup()">Sign Up</button>
+</form>
+<div id="result"></div>
+
+<script>
+async function handleCandidateSignup() {
+    console.log('Signup called');
+    const username = document.getElementById('candidateUsername')?.value?.trim();
+    const password = document.getElementById('candidatePassword')?.value?.trim();
+    const email = document.getElementById('candidateEmail')?.value?.trim();
+    const phone = document.getElementById('candidatePhone')?.value?.trim();
+    
+    console.log('Form data:', {username, password, email, phone});
+    
+    if (!username || !password || !email || !phone) {
+        alert('All fields required');
+        return;
+    }
+    
+    try {
+        const response = await fetch('http://localhost:3000/api/auth/signup/candidate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({username, password, email, phone}),
+            credentials: 'include'
+        });
+        
+        console.log('Response:', response.status);
+        const data = await response.json();
+        console.log('Data:', data);
+        
+        if (data.success) {
+            alert('Registration successful!');
+            document.getElementById('result').innerHTML = '<p style="color:green">SUCCESS!</p>';
+        } else {
+            alert('Failed: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error: ' + error.message);
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+<head>
+    <title>HustleEd</title>
+<!--    <link rel="stylesheet" th:href="@{/css/styles.css}">-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/font-awesome.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/feather.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/owl.carousel.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/magnific-popup.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/lc_lightbox.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-select.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dataTables.bootstrap5.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/select.bootstrap5.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dropzone.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/scrollbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/datepicker.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/flaticon.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/swiper-bundle.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" class="skin" type="text/css" th:href="@{/css/skins-type/skin-4.css}">
+</head>
+<body>
+<header>
+    <nav>
+        <a th:href="@{/}">HustleEd</a>
+        <a th:href="@{/jobs}">Jobs</a>
+        <span style="float:right">
+            <span th:if="${#authorization.expression('isAuthenticated()')}">
+                Hello, <b th:text="${#authentication.name}">user</b> |
+                <a th:href="@{/logout}">Logout</a>
+            </span>
+            <span th:if="${#authorization.expression('!isAuthenticated()')}">
+                <a th:href="@{/login}">Login</a> |
+                <a th:href="@{/register}">Register</a>
+            </span>
+        </span>
+    </nav>
+</header>
+<hr>
+<div th:replace="${content}"></div>
+<footer><hr><small>&copy; 2025 HustleEd</small></footer>
+
+<script  th:src="@{/js/jquery-3.6.0.min.js}"></script>
+<script  th:src="@{/js/popper.min.js}"></script>
+<script  th:src="@{/js/bootstrap.min.js}"></script>
+<script  th:src="@{/js/magnific-popup.min.js}"></script>
+<script  th:src="@{/js/waypoints.min.js}"></script>
+<script  th:src="@{/js/counterup.min.js}"></script>
+<script  th:src="@{/js/waypoints-sticky.min.js}"></script>
+<script  th:src="@{/js/isotope.pkgd.min.js}"></script>
+<script  th:src="@{/js/imagesloaded.pkgd.min.js}"></script>
+<script  th:src="@{/js/owl.carousel.min.js}"></script>
+<script  th:src="@{/js/theia-sticky-sidebar.js}"></script>
+<script  th:src="@{/js/lc_lightbox.lite.js}" ></script>
+<script  th:src="@{/js/bootstrap-select.min.js}"></script>
+<script  th:src="@{/js/dropzone.js}"></script>
+<script  th:src="@{/js/jquery.scrollbar.js}"></script>
+<script  th:src="@{/js/bootstrap-datepicker.js}"></script>
+<script  th:src="@{/js/jquery.dataTables.min.js}"></script>
+<script  th:src="@{/js/dataTables.bootstrap5.min.js}"></script>
+<script  th:src="@{/js/chart.js}"></script>
+<script  th:src="@{/js/bootstrap-slider.min.js}"></script>
+<script  th:src="@{/js/swiper-bundle.min.js}"></script>
+<script  th:src="@{/js/custom.js}"></script>
+
+</body>
+</html>

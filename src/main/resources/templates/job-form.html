@@ -1,0 +1,25 @@
+<!-- src/main/resources/templates/job-form.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<div>
+    <h2 th:text="${job.id} != null ? 'Edit Job' : 'Create Job'">Job</h2>
+    <form th:action="${action}" th:object="${job}" method="post">
+        <label>Title</label>
+        <input type="text" th:field="*{title}" required>
+        <br>
+        <label>Company</label>
+        <input type="text" th:field="*{company}" required>
+        <br>
+        <label>Location</label>
+        <input type="text" th:field="*{location}">
+        <br>
+        <label>Description</label>
+        <textarea th:field="*{description}" rows="5"></textarea>
+        <br>
+        <button type="submit">Save</button>
+        <a th:href="@{/jobs}">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

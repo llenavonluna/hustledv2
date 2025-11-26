@@ -1,0 +1,14 @@
+<!-- src/main/resources/templates/job-view.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<div>
+    <h2 th:text="${job.title}">Job Title</h2>
+    <p><b>Company:</b> <span th:text="${job.company}"></span></p>
+    <p><b>Location:</b> <span th:text="${job.location}"></span></p>
+    <p><b>Description:</b></p>
+    <p th:text="${job.description}"></p>
+    <p><a th:href="@{/jobs}">Back to list</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!-- src/main/resources/templates/register.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{fragments/layout :: layout(~{::body})}">
+<body>
+<!--Modals Section-->
+<!--Register-->
+<div class="modal fade twm-sign-up" id="sign_up_popup" aria-hidden="true" aria-labelledby="sign_up_popupLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form>
+
+                <div class="modal-header">
+                    <h2 class="modal-title" id="sign_up_popupLabel">Sign Up</h2>
+                    <p>Sign Up and get access to all the features of HustlEd</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="twm-tabs-style-2">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sign-candidate" type="button"><i class="fas fa-user-tie"></i>Candidate</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sign-Employer" type="button"><i class="fas fa-building"></i>Employer</button>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="sign-candidate">
+
+                                <div th:if="${error}">
+                                    <p style="color:red" th:text="${error}"></p>
+                                </div>
+
+                                <div class="row">
+                                    <form th:action="@{/register}" th:object="${user}" method="post">
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input th:field="*{username}" type="text" class="form-control" id="username" placeholder="Username*" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="password" th:field="${password}" type="text" class="form-control" required="" placeholder="Password*">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="email" th:field="${email}" type="text" class="form-control" required="" placeholder="Email*">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="phone" th:field="${phone}" type="text" class="form-control" required="" placeholder="Phone*">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <div class=" form-check">
+                                                    <input type="checkbox" class="form-check-input" id="agree1">
+                                                    <label class="form-check-label" for="agree1">I agree to the <a href="javascript:;">Terms and conditions</a></label>
+                                                    <p>Already registered?
+                                                        <button class="twm-backto-login" data-bs-target="#sign_up_popup2" data-bs-toggle="modal" data-bs-dismiss="modal">Log in here</button>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="site-button">Sign Up</button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="sign-Employer">
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <input name="username" type="text" required="" class="form-control" placeholder="Username*">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <input name="email" type="text" class="form-control" required="" placeholder="Password*">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <input name="phone" type="text" class="form-control" required="" placeholder="Email*">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <input name="phone" type="text" class="form-control" required="" placeholder="Phone*">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="form-group mb-3">
+                                            <div class=" form-check">
+                                                <input type="checkbox" class="form-check-input" id="agree2">
+                                                <label class="form-check-label" for="agree2">I agree to the <a href="javascript:;">Terms and conditions</a></label>
+                                                <p>Already registered?
+                                                    <button class="twm-backto-login" data-bs-target="#sign_up_popup2" data-bs-toggle="modal" data-bs-dismiss="modal">Log in here</button>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button type="submit" class="site-button">Sign Up</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

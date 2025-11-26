@@ -1,0 +1,103 @@
+<!-- fragments/login-modal.html -->
+<div th:fragment="loginModal">
+    <div class="modal fade twm-sign-up" id="log_in_popup" aria-hidden="true" aria-labelledby="log_in_popupLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <form>
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="log_in_popupLabel" th:text="${loginHeader}">Login</h2>
+                        <p>Login and get access to all the features of HustlEd</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="twm-tabs-style-2">
+                            <ul class="nav nav-tabs" id="myTab2" role="tablist">
+
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login-candidate" type="button"><i class="fas fa-user-tie"></i>Candidate</button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#login-Employer" type="button"><i class="fas fa-building"></i>Employer</button>
+                                </li>
+
+                            </ul>
+
+                            <div class="tab-content" id="myTab2Content">
+                                <div class="tab-pane fade show active" id="login-candidate">
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="username" type="text" required="" class="form-control" placeholder="Username*">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="email" type="text" class="form-control" required="" placeholder="Password*">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <div class=" form-check">
+                                                    <input type="checkbox" class="form-check-input" id="Password3">
+                                                    <label class="form-check-label rem-forgot" for="Password3">Remember me <a href="javascript:;">Forgot Password</a></label>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="site-button">Log in</button>
+                                            <div class="mt-3 mb-3">Don't have an account ?
+                                                <button class="twm-backto-login" data-bs-toggle="modal" data-bs-target="#sign_up_popup" data-bs-dismiss="modal">Sign Up</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="login-Employer">
+                                    <div class="row">
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="username" type="text" required="" class="form-control" placeholder="Usearname*">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <input name="email" type="text" class="form-control" required="" placeholder="Password*">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-12">
+                                            <div class="form-group mb-3">
+                                                <div class=" form-check">
+                                                    <input type="checkbox" class="form-check-input" id="Password4">
+                                                    <label class="form-check-label rem-forgot" for="Password4">Remember me <a href="javascript:;">Forgot Password</a></label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <button type="submit" class="site-button">Log in</button>
+                                            <div class="mt-3 mb-3">Don't have an account ?
+                                                <button class="twm-backto-login" id="signup-trigger-employer" data-bs-dismiss="modal">Sign Up</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
